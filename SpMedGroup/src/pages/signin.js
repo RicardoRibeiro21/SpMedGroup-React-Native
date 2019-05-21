@@ -1,21 +1,21 @@
-import React, {Component } from 'react';
-import {View, StyleSheet, Text , AsyncStorage, TextInput} from 'react-native'
-
-class SignIn extends  Component{
-    constructor(){
+import React, { Component } from 'react';
+import { View, StyleSheet, Text, AsyncStorage, TextInput,  TouchableOpacity} from 'react-native'
+import api from '../services/api';
+class SignIn extends Component {
+    constructor() {
         super();
         this.state = {
-            email:"",
+            email: "",
             senha: "",
         }
     }
 
-    static navigationOptions =  {
-        header : null
+    static navigationOptions = {
+        header: null
     }
 
-    _FazerLogin = async () =>{
-        const resposta = await api.post('./login', {
+    _FazerLogin = async () => {
+        const resposta = await api.post('/login', {
             email: this.state.email,
             senha: this.state.senha
         })
@@ -28,14 +28,18 @@ class SignIn extends  Component{
 
     }
 
-    render(){
+    render() {
         return (
             <View>
-                <TextInput placeholder="Email" onChange={email => this.setState({email})}></TextInput>
-                <TextInput placeholder="Senha" onChange={senha => this.setState({senha})}>Senha</TextInput>
+                <TextInput placeholder="Email" onChange={email => this.setState({ email })}></TextInput>
+                <TextInput placeholder="Senha" onChange={senha => this.setState({ senha })}></TextInput>
+                <TouchableOpacity onPress={this._FazerLogin}>
+                    <Text >LOGIN</Text>
+                </TouchableOpacity>
             </View>
         )
     }
 
 
 }
+export default SignIn;

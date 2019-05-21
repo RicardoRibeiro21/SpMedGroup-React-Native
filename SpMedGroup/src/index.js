@@ -14,7 +14,6 @@ const AuthStack = createStackNavigator({ SignIn });
 const MainNavigator = createBottomTabNavigator (
     {
     Consultas,
-    Clinicas,
     Especializacoes,
     },
          {
