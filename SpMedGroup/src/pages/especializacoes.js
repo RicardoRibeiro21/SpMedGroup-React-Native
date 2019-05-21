@@ -24,7 +24,7 @@ class Especializacoes extends Component {
         if (this.state.Usuario.tipo != null) {
             const resposta = await api.get('/Especializacoes');
             const dadosApi = resposta.data;
-            this.setState({ consultas: dadosApi });
+            this.setState({ Especializacoes: dadosApi });
         } else {
             console.warn("Usuário não logado!");
         }
@@ -36,20 +36,20 @@ class Especializacoes extends Component {
             <View >
                 <Text>Especializacoes</Text>
                 <FlatList
-
-                    data={this.state.listaEventos}
+                    data={this.state.Especializacoes}
                     keyExtractor={item => item.id}
-                    renderItem={this.renderizaItem}
-                />
-                
+                    renderItem={this._renderizaItem}/>                
             </View>
 
 
         )
     }
-    renderItem = ({ item }) => (
-        <View></View>
-)
+    _renderizaItem =  item => (
+        <View>
+        <Text>{item.id}</Text>
+        <Text>{item.especializacao}</Text>
+        </View>
+    )
 }
 
 export default Especializacoes;

@@ -8,7 +8,7 @@ class Consultas extends Component {
         let usuario = parseJwt();
         super();
         this.state = {
-            consulta: [],
+            consultas: [],
             Usuario: {
                 id: usuario.jti,
                 tipo: usuario.Role
@@ -33,10 +33,21 @@ class Consultas extends Component {
             default:
                 break;
         }
-        const resposta = await api.get(endpoint);
-        const dadosApi = resposta.data;
-        this.setState({ consultas: dadosApi });
-
+       return fetch(api.get(endpoint), {
+        
+            method: 'GET',
+            headers: {
+              "Content-Type" : "application/json",
+              "Authorization" :  'Bearer ' + localStorage.getItem("usuario-spmedgroup")
+            }   
+       }) 
+       .then(resposta => resposta.json())
+       .then(data => this.setState({consultas : data}))
+       .catch(erro => console.log(erro))
+                
+        // const resposta = await api.get(endpoint);
+        // const dadosApi = resposta.data;
+        // this.setState({ consultas: dadosApi });
     }
 
     render() {
@@ -44,15 +55,19 @@ class Consultas extends Component {
             <View >
                 <Text>Minhas Consultas</Text>
                 <FlatList
-
-                    data={this.state.listaEventos}
+                    data={this.state.consultas}
                     keyExtractor={item => item.id}
-                    renderItem={this.renderizaItem}
+                    renderItem={this._renderizaItem}
                 />
             </View>
-
         )
     }
-
+    _renderizaItem = item => {
+        <View>
+            <Text>{item.id}</Text>
+            <Text>{item.dataConsulta}</Text>
+            <Text>{item.crm}</Text>            
+        </View>
+    }
 }
 export default Consultas;
