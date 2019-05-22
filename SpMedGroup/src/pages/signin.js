@@ -1,49 +1,53 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, AsyncStorage, TextInput, TouchableOpacity } from 'react-native'
-import api from '../services/api';
+import { View, StyleSheet, Text, AsyncStorage, TextInput, TouchableOpacity } from 'react-native';
+
+
 
 class SignIn extends Component {
-    constructor() {
-        super();
+    static navigationOptions = {
+            header: null
+        }
+    constructor(props) {
+        super(props);
         this.state = {
             email: "",
             senha: "",
+            erro: ""
         }
     }
 
-    static navigationOptions = {
-        header: null
-    }
-
-    onPress = event => {
-        event.persist();
-    }
-
-    _FazerLogin = async () => {
-        const resposta = await api.post('/login', {
-            email: this.state.email,
-            senha: this.state.senha
-        })
+    _fazerLogin = async () => {
+      
+            fetch('http://192.168.3.96:5001/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-type' : 'application/json'
+                },
+                body: JSON.stringify({
+                    email : this.state.email,
+                    senha : this.state.senha
+                })
+            })
+            .then()
+            .catch(this.setState({erro : "Deu bosta"}))
+            alert(this.state.email + this.state.senha);
+       
         // Gerando token após o login
-        const token = resposta.data.token;
-        //Armazenando o token no storage
-        await AsyncStorage("UserToken", token);
-        //Fazendo navegação após a validação do login
-        this.props.navigation.navigate("MainNavigator");
-        console.warn(token);
     }
+    
 
     render() {
         return (
-            <View style={styles.main}>
+            <View style={styles.main}>  
+            {/* <TopNav>hu</TopNav>           */}
                 <Text style={styles.title}>Login</Text>
-                <TextInput style={styles.inputLogin} placeholder="Email" onChange={email => this.setState({ email })}></TextInput>
-                <TextInput  style={styles.inputLogin}  placeholder="Senha" onChange={senha => this.setState({ senha })} secureTextEntry={true}></TextInput>
-                <TouchableOpacity style={styles.btnLogin} onPress={()=>this._FazerLogin}>
+                <TextInput style={styles.inputLogin} placeholder="Email" value={this.state.email} onChange={email => this.setState({ email })}></TextInput>
+                <TextInput  style={styles.inputLogin}  placeholder="Senha" value={this.state.senha}  onChange={senha => this.setState({ senha })} secureTextEntry={true}></TextInput>
+                <TouchableOpacity style={styles.btnLogin} onPress={this._fazerLogin}>
                     <Text style={styles.textbtn}>LOGIN</Text>
                 </TouchableOpacity>
             </View>
-
+            
         )
     }
 }
