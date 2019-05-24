@@ -1,59 +1,41 @@
 import React, { Component } from 'react'
-
-import { View, StyleSheet, FlatList, Text } from 'react-native';
+import { View, StyleSheet, AsyncStorage, Text } from 'react-native';
+import { FlatList  } from 'react-native-gesture-handler';
 import api from '../services/api';
 
-class Consultas extends Component {
-    constructor() {
-        let usuario = parseJwt();
-        super();
+
+class minhasConsultas extends Component {
+    constructor(props) {
+        super(props);
         this.state = {
-            consultas: [],
-            Usuario: {
-                id: usuario.jti,
-                tipo: usuario.Role
-            }
+            consultas: []
+
         }
     }
 
-    _componentDidMount() {
-        this.carregarConsultas();
+    componentDidMount() {
+        this._carregarConsultas();   
+        console.warn("teste"); 
     }
 
     _carregarConsultas = async () => {
-        switch (this.state.Usuario.tipo) {
-            case "Comum":
-                endpoint = '/Usuarios/minhasConsultas';
-                break;
-            case "Medico":
-                endpoint = '/Medicos/minhasConsultas';
-                break;
-            case "Administrador":
-                endpoint = '/Consultas'
-            default:
-                break;
-        }
-       return fetch(api.get(endpoint), {
-        
-            method: 'GET',
+    console.warn("Funfa");
+        const token = await AsyncStorage.getItem("userToken");
+        console.warn(token);
+        const resposta = await api.get("/Consultas", {
             headers: {
-              "Content-Type" : "application/json",
-              "Authorization" :  'Bearer ' + localStorage.getItem("usuario-spmedgroup")
-            }   
-       }) 
-       .then(resposta => resposta.json())
-       .then(data => this.setState({consultas : data}))
-       .catch(erro => console.log(erro))
-                
-        // const resposta = await api.get(endpoint);
-        // const dadosApi = resposta.data;
-        // this.setState({ consultas: dadosApi });
+                Authorization: "Bearer " + token
+            }
+        })
+        this.setState({ consultas: resposta.data })
+        console.warn(resposta.data);
     }
 
     render() {
         return (
-            <View >
-                <Text>Minhas Consultas</Text>
+            <View style={styles.main} >
+                <Text style={styles.title}>Minhas Consultas</Text>
+                
                 <FlatList
                     data={this.state.consultas}
                     keyExtractor={item => item.id}
@@ -62,12 +44,41 @@ class Consultas extends Component {
             </View>
         )
     }
-    _renderizaItem = item => {
+    _renderizaItem = ({item}) => (
         <View>
-            <Text>{item.id}</Text>
-            <Text>{item.dataConsulta}</Text>
-            <Text>{item.crm}</Text>            
+            <Text style={styles.text}>{item.id}</Text>
+            <Text style={styles.text}>{item.dataConsulta}</Text>
+            <Text style={styles.text}>{item.crm}</Text>
+            <Text style={styles.text}>{item.resultado}</Text>
+            <Text style={styles.text}>{item.statusConsultaNavigation}</Text>
         </View>
-    }
+    )
+
+
+    
 }
-export default Consultas;
+const styles = StyleSheet.create({
+    text: {
+        marginTop: 1,
+        marginBottom: 1, 
+        padding: 2,
+        fontSize: 20
+    },
+    main: {
+        width: "100%",
+        height: "100%",
+        justifyContent: "center",
+        alignItems: "center",
+        alignContent: "center",
+    },
+    title: {
+        fontSize: 40,
+        fontFamily: "Gabriola",
+        
+        textShadowRadius: 1,
+        borderBottomWidth: 4,
+        borderColor: "#80EBFF",
+        borderRadius: 10,
+    }
+})
+export default minhasConsultas;

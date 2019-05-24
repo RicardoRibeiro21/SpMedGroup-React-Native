@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Text, AsyncStorage, TextInput, TouchableOpacity } from 'react-native';
+import api from '../services/api';
+import jwt from 'jwt-decode';
 
 
 
@@ -15,25 +17,25 @@ class SignIn extends Component {
             erro: ""
         }
     }
-
     _fazerLogin = async () => {
       
-            fetch('http://192.168.3.96:5001/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-type' : 'application/json'
-                },
-                body: JSON.stringify({
-                    email : this.state.email,
-                    senha : this.state.senha
-                })
-            })
-            .then()
-            .catch(this.setState({erro : "Deu bosta"}))
-            alert(this.state.email + this.state.senha);
-       
-        // Gerando token após o login
-    }
+        const resposta = await api.post("/Login", {
+            email: this.state.email,
+            senha: this.state.senha
+          })
+          const token = resposta.data.token;
+          await AsyncStorage.setItem("userToken", token);
+          if (token.length > 10) {
+            if (jwt(token).Role == 'Administrador') {
+              this.props.navigation.navigate('MainNavigator')
+            }
+            if (jwt(token).Role == 'Paciente') {
+              this.props.navigation.navigate('MainNavigator')
+            } if (jwt(token).Role == 'Medico') {
+              this.props.navigation.navigate('MainNavigator')
+            }
+          } 
+        }
     
 
     render() {
@@ -41,8 +43,8 @@ class SignIn extends Component {
             <View style={styles.main}>  
             {/* <TopNav>hu</TopNav>           */}
                 <Text style={styles.title}>Login</Text>
-                <TextInput style={styles.inputLogin} placeholder="Email" value={this.state.email} onChange={email => this.setState({ email })}></TextInput>
-                <TextInput  style={styles.inputLogin}  placeholder="Senha" value={this.state.senha}  onChange={senha => this.setState({ senha })} secureTextEntry={true}></TextInput>
+                <TextInput style={styles.inputLogin} placeholder="Email" defaultValue="ricardo.sao@hotmail.com.br"  onChangeText={email => this.setState({ email })}/>
+                <TextInput style={styles.inputLogin}  placeholder="Senha"  defaultValue="Dr@g0nf0rce"   onChangeText={senha => this.setState({senha} )} secureTextEntry={true}/>
                 <TouchableOpacity style={styles.btnLogin} onPress={this._fazerLogin}>
                     <Text style={styles.textbtn}>LOGIN</Text>
                 </TouchableOpacity>

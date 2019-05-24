@@ -6,19 +6,19 @@ import {
 } from "react-navigation";
 
 import SignIn from './pages/signin';
-import Consultas from './pages/minhasConsultas';
+import minhasConsultas from './pages/minhasConsultas';
 import Especializacoes from './pages/especializacoes';
 
 const AuthStack = createStackNavigator({ SignIn });
 
 const MainNavigator = createBottomTabNavigator (
     {
-    Consultas,
+    minhasConsultas,
     Especializacoes,
     },
          {
         //Rota inicial
-        initialRouteName: 'Consultas',        
+        initialRouteName: 'minhasConsultas',        
         swipeEnabled: true,
         tabBarOptions: {
             showLabel: false,

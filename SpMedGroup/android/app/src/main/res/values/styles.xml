@@ -2,7 +2,11 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+        <!-- Customize your theme here. -->q
+        <!-- Mudando cor do status bar -->
+        <item name="android:statusBarColor">
+        @color/primary
+        </item>
     </style>
 
 </resources>
