@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, AsyncStorage, Text } from 'react-native';
-import { FlatList  } from 'react-native-gesture-handler';
+import { FlatList } from 'react-native-gesture-handler';
 import api from '../services/api';
+
 
 
 class minhasConsultas extends Component {
@@ -14,12 +15,12 @@ class minhasConsultas extends Component {
     }
 
     componentDidMount() {
-        this._carregarConsultas();   
-        console.warn("teste"); 
+        this._carregarConsultas();
+        console.warn("teste");
     }
 
     _carregarConsultas = async () => {
-    console.warn("Funfa");
+        console.warn("Funfa");
         const token = await AsyncStorage.getItem("userToken");
         console.warn(token);
         const resposta = await api.get("/Consultas", {
@@ -35,7 +36,7 @@ class minhasConsultas extends Component {
         return (
             <View style={styles.main} >
                 <Text style={styles.title}>Minhas Consultas</Text>
-                
+
                 <FlatList
                     data={this.state.consultas}
                     keyExtractor={item => item.id}
@@ -45,31 +46,32 @@ class minhasConsultas extends Component {
         )
     }
 
-    _renderizaItem = ({item}) => (
+    _renderizaItem = ({ item }) => (
         <View>
-            <Text style={styles.text}>{item.id}</Text>
-            {/* <Text style={styles.text}>{item.idEspecializacaoNavigation.Especializacao}</Text> */}
-            {/* <Text style={styles.text}>{item.idClinicaNavigation.Nome}</Text> */}
-            <Text style={styles.text}>{item.idProntuarioNavigation.idUsuarioNavigation.nome}</Text>
-            <Text style={styles.text}>{item.dataConsulta}</Text>
-            <Text style={styles.text}>{item.crmMedicoNavigation.idUsuario}</Text>
-            <Text style={styles.text}>{item.crmMedicoNavigation.crm}</Text>
-            <Text style={styles.text}>{item.resultado}</Text>
-            <Text style={styles.text}>{item.statusConsultaNavigation.situacao}</Text>
+            <View style={{width: 220 , height: 120, borderRadius: 4, borderColor:'#61FFB8', borderStyle: 'solid'}}>
+                <Text style={styles.text}>{item.id}</Text>
+                {/* <Text style={styles.text}>{item.idEspecializacaoNavigation.Especializacao}</Text> */}
+                {/* <Text style={styles.text}>{item.idClinicaNavigation.Nome}</Text> */}
+                <Text style={styles.text}>{item.idProntuarioNavigation.idUsuarioNavigation.nome}</Text>
+                <Text style={styles.text}>{item.dataConsulta}</Text>
+                <Text style={styles.text}>{item.crmMedicoNavigation.idUsuario}</Text>
+                <Text style={styles.text}>{item.crmMedicoNavigation.crm}</Text>
+                <Text style={styles.text}>{item.resultado}</Text>
+                <Text style={styles.text}>{item.statusConsultaNavigation.situacao}</Text>
+            </View>
         </View>
     )
 
 
-    
+
 }
 const styles = StyleSheet.create({
-    text: {        
+    text: {
         marginTop: 1,
-        marginBottom: 1,         
-        fontSize: 20,
-        borderColor: 'black',
-        marginBottom: 4, 
-        
+        marginBottom: 1,
+        fontSize: 17,
+        color: 'black',        
+        marginBottom: 4,
     },
     main: {
         width: "100%",
@@ -81,11 +83,17 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 30,
-        fontFamily: "Gabriola",       
+        fontFamily: "Gabriola",
         textShadowRadius: 1,
         borderBottomWidth: 4,
         borderColor: "#80EBFF",
         borderRadius: 10,
+    },
+    div: {
+        alignContent: 'center',
+        borderColor: 'green',
+        borderRadius: 4,
+        
     }
 })
 export default minhasConsultas;
